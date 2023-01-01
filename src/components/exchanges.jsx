@@ -3,24 +3,36 @@ import server from '../index'
 import React, {useEffect, useState} from 'react'
 import Loader from '../components/loader'
 import { Container, HStack, Text, Image, VStack, Heading } from '@chakra-ui/react'
+import Error from '../components/error'
 
 const Exchanges =()=>{
     const [loader, setLoader] = useState(true)
     const [exchanges, setExchanges] = useState([])
+    const [error, setError] = useState(false)
 
 
         useEffect(() => {
-        const fetchApi = async ()=>{
-            const {data} = await axios.get(`${server}/exchanges`)
-            console.log(data)
-            setLoader(false)
-            setExchanges(data)
-        }
-        fetchApi()
+            try{
+                const fetchApi = async ()=>{
+                    const {data} = await axios.get(`${server}/exchanges`)
+                    console.log(data)
+                    setLoader(false)
+                    setExchanges(data)
+                }
+                fetchApi()
+
+            }
+            catch(error){
+                setError(true)
+                setLoader(false)
+                
+            }
         }, [])
         
       
-    
+    if(error){
+        return <Error/>
+    }
     return(
         <Container maxWidth={'1300px'}>
         <>
